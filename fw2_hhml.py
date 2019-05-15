@@ -48,10 +48,8 @@ def main():
 	print "No input ROOT file specified"
 	sys.exit()
 
-    inRootFiles= []
-    #inRootFiles = [x.split(',') for x in args]
-    inRootFiles = filter(lambda arg: fnmatch.fnmatch(arg, '*.root*') , args)
-
+    inRootFiles = args
+    #inRootFiles = filter(lambda arg: fnmatch.fnmatch(arg, '*.root*') , args)
     #try:
     #    [os.path.exists(x) for x in inRootFiles]
     #except Exception:
