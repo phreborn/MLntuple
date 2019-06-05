@@ -1,4 +1,4 @@
-How to run FW2
++ How to run FW2
 
 Create text file with list of branches you want to keep. 
 
