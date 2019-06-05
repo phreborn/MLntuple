@@ -48,17 +48,21 @@ class Analyze:
 	self.outTreeName= outTreeName
 	
 	self.outFile	= outFile
-	self.outFile.cd()
+    	self.totalWghts, self.LHE_wghts = self.getMrgdTotalWghts(inRootFiles)
+
+	##Dirty implementation
+	from array import array 
+	self.scale_nom = array('d', [0])
+	
 
 	#Write the sumweights Histograms to the output file
 	#Check if the 'loose' folder already exist
 	if len([x.ReadObj() for x in self.outFile.GetListOfKeys() if x.ReadObj().GetName()=='loose']) ==0:
   	    print "Merging weight histograms..."
-    	    totalWghts, LHE_wghts = self.getMrgdTotalWghts(inRootFiles)
-	    print "ttoalWeights: ",totalWghts,LHE_wghts
     	    ldir = self.outFile.mkdir('loose')
-    	    ldir.WriteTObject(totalWghts)
-    	    ldir.WriteTObject(LHE_wghts)
+    	    ldir.WriteTObject(self.totalWghts)
+    	    ldir.WriteTObject(self.LHE_wghts)
+	    ldir.Write()
     	    print "done !"
 
     def getMrgdTotalWghts(self,filenames):
@@ -94,6 +98,8 @@ class Analyze:
 	self.outFile.cd()
 	self.newTree= self.chain.CloneTree(0)
 	self.newTree.SetName(self.outTreeName)
+	self.newTree.Branch("scale_nom",self.scale_nom,"scale_nom/D")
+
 	self.treeFormula = ROOT.TTreeFormula("cut",Cuts,self.chain)
 	self.chain.SetNotify(self.treeFormula)
 
@@ -103,6 +109,7 @@ class Analyze:
 	self.outFile.cd()
         for i in pbar(xrange(ch.GetEntries())):
             self.chain.GetEntry(i)
+	    self.scale_nom[0] = ch.mc_rawXSection*ch.mc_kFactor/self.totalWghts.At(2)
             if self.treeFormula.EvalInstance(): 
 	        self.newTree.Fill()
 
