@@ -1,6 +1,6 @@
-m_xsec
 mc_xSection
 mc_rawXSection
+mc_kFactor 
 isBlinded
 RunNumber
 EventNumber
@@ -59,7 +59,5 @@ lep_isMediumLH_*
 lep_isTightLH_*
 lep_isTrigMatch_*
 lep_isTrigMatchDLT_*
-lep_truth_matchdr_*
-lep_truth_parent_pdgid_*
 lep_truthType_*
 lep_truthOrigin_*
