@@ -6,6 +6,7 @@ HH-ML FW2 uses ttHML-GFW1 as an input. Pick a ttHML-GFW1 file and figure out wha
 Add the identified branches to a text file. Alternatively you can use the official list of branches maintained in this software. 
 
 Setup any ROOT release (prefereably newer than v6.10) and execute the following 
+
 ` python fw2_hhml.py -s branchList.txt <rootFile1>,<rootFile2>`
 
 This will create an output file `output.root` which containes the ntuples and branches requested. 
