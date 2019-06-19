@@ -9,7 +9,7 @@ Add the identified branches to a text file. Alternatively you can use the offici
 Use the setup script to setup things required for running
 `source setup.sh`
 
-Setup any ROOT release (prefereably newer than v6.10) and execute the following 
+To run the script execute the following 
 
 ` python fw2_hhml.py -s branchList.txt <rootFile1>,<rootFile2>`
 
