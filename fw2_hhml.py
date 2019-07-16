@@ -14,6 +14,19 @@ def options():
     parser.add_option("-t","--tree",dest="tree",type=str,help="Input/Output tree name",default='nominal')
     return parser.parse_args()
 
+def progressbar(it, prefix="", size=60, file=sys.stdout):
+    count = len(it)
+    def show(j):
+        x = int(size*j/count)
+        file.write("%s[%s%s] %i/%i\r" % (prefix, "#"*x, "."*(size-x), j, count))
+        file.flush()        
+    show(0)
+    for i, item in enumerate(it):
+        yield item
+        show(i+1)
+    file.write("\n")
+    file.flush()
+
 class CutSelector:
     def __init__(self,name,cut):
         self.name 	= name
@@ -104,10 +117,8 @@ class Analyze:
 	self.chain.SetNotify(self.treeFormula)
 
     def execute(self):
-	from progressbar import ProgressBar
-        pbar = ProgressBar()
 	self.outFile.cd()
-        for i in pbar(xrange(ch.GetEntries())):
+        for i in progressbar(xrange(ch.GetEntries()),"Progress"):
             self.chain.GetEntry(i)
 	    self.scale_nom[0] = ch.mc_rawXSection*ch.mc_kFactor/self.totalWghts.At(2)
             if self.treeFormula.EvalInstance(): 
