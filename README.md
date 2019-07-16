@@ -15,4 +15,7 @@ To run the script execute the following
 
 This will create an output file `output.root` which containes the ntuples and branches requested. 
 
+### Background samples 
+https://gitlab.cern.ch/atlasHTop/ttHMultiGFW2/tree/master/ttHMultilepton/share 
+
 ## Running on the grid. 
