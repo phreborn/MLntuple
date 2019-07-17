@@ -63,13 +63,13 @@ DRll*
 lep_promptLeptonVeto_TagWeight_*
 lep_isolationFixedCutLoose_*
 lep_isMedium_*
+lep_isLoose_*
+lep_isTight_*
 lep_ambiguityType_*
 lep_topoEtcone20_*
 lep_topoEtcone30_*
 lep_ptVarcone20_*
 lep_ptVarcone30_*
-lep_isLoose_*
-lep_isTight_*
 lep_chargeIDBDTLoose_*
 lep_chargeIDBDTMedium_*
 lep_chargeIDBDTTight_*
