@@ -61,7 +61,14 @@ class Analyze:
 	self.outTreeName= outTreeName
 	
 	self.outFile	= outFile
-    	self.totalWghts, self.LHE_wghts = self.getMrgdTotalWghts(inRootFiles)
+        if os.path.exists('total_weights.root'):
+            wghtFile = ROOT.TFile.Open('total_weights.root')
+	    self.totalWghts,self.LHE_wghts = self.getMrgdTotalWghts(['total_weights.root'])
+	    print 'Weight: ',self.totalWghts
+	else:
+    	    self.totalWghts, self.LHE_wghts = self.getMrgdTotalWghts(inRootFiles)
+	    print "Weight from local file"
+
 
 	##Dirty implementation
 	from array import array 
@@ -70,13 +77,13 @@ class Analyze:
 
 	#Write the sumweights Histograms to the output file
 	#Check if the 'loose' folder already exist
-	if len([x.ReadObj() for x in self.outFile.GetListOfKeys() if x.ReadObj().GetName()=='loose']) ==0:
-  	    print "Merging weight histograms..."
-    	    ldir = self.outFile.mkdir('loose')
-    	    ldir.WriteTObject(self.totalWghts)
-    	    ldir.WriteTObject(self.LHE_wghts)
-	    ldir.Write()
-    	    print "done !"
+	#if len([x.ReadObj() for x in self.outFile.GetListOfKeys() if x.ReadObj().GetName()=='loose']) ==0:
+  	#    print "Merging weight histograms..."
+    	#    ldir = self.outFile.mkdir('loose')
+    	#    ldir.WriteTObject(self.totalWghts)
+    	#    ldir.WriteTObject(self.LHE_wghts)
+	#    ldir.Write()
+    	#    print "done !"
 
     def getMrgdTotalWghts(self,filenames):
     	rooF_li 		= [ROOT.TFile.Open(x) for x in filenames]
@@ -149,16 +156,22 @@ if __name__ == '__main__':
 
     [ch.AddFile(x) for x in inRootFiles]
 
+    onelepCuts = CutSelector("1l","onelep_type>0")
+
     dilepCuts 	= CutSelector("2l","dilep_type>0")
-    dilepCuts.addANDCut("nJets_OR_T<10")
 
     trilepCuts 	= CutSelector("3l","trilep_type>0")
-    trilepCuts.addANDCut("nJets_OR_T<10")
 
     quadCuts = CutSelector("4l","quadlep_type>0")
-    quadCuts.addANDCut("nJets_OR_T<10")
+
+    pentaCuts = CutSelector("5l","total_leptons>=5")
 
     outFile = ROOT.TFile.Open(ops.output_file,"RECREATE","",512)
+
+    one_ana = Analyze(ch,"onelep",outFile)
+    one_ana.prepareSelection(ops.branches_file,onelepCuts.getCuts())
+    one_ana.execute()
+    one_ana.finalize()
 
     di_ana = Analyze(ch,"dilep",outFile)
     di_ana.prepareSelection(ops.branches_file,dilepCuts.getCuts())
@@ -174,3 +187,8 @@ if __name__ == '__main__':
     quad_ana.prepareSelection(ops.branches_file,quadCuts.getCuts())
     quad_ana.execute()
     quad_ana.finalize()
+
+    penta_ana = Analyze(ch,"pentalep",outFile)
+    penta_ana.prepareSelection(ops.branches_file,pentaCuts.getCuts())
+    penta_ana.execute()
+    penta_ana.finalize()
