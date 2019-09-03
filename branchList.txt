@@ -1,6 +1,7 @@
 mc_xSection
 mc_rawXSection
 mc_kFactor 
+mc_channel_number
 isBlinded
 MV2c10_70_EventWeight
 SherpaNJetWeight
