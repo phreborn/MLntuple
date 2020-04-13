@@ -74,3 +74,5 @@ lep_ptVarcone30_*
 lep_chargeIDBDTLoose_*
 lep_chargeIDBDTMedium_*
 lep_chargeIDBDTTight_*
+lead_jet*
+sublead_jet*
