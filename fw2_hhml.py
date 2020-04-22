@@ -55,24 +55,28 @@ class CutSelector:
 class Analyze:
     def __init__(self,chain,outTreeName,outFile):
         self.chain 	= chain
-	self.chain.LoadTree(0)
+        self.chain.LoadTree(0)
 
-	self.newTree	= None
-	self.outTreeName= outTreeName
-	
-	self.outFile	= outFile
+        self.newTree	= None
+        self.outTreeName= outTreeName
+
+        self.outFile	= outFile
         if os.path.exists('total_weights.root'):
             wghtFile = ROOT.TFile.Open('total_weights.root')
-	    self.totalWghts,self.LHE_wghts = self.getMrgdTotalWghts(['total_weights.root'])
-	    print 'Weight: ',self.totalWghts
-	else:
-    	    self.totalWghts, self.LHE_wghts = self.getMrgdTotalWghts(inRootFiles)
-	    print "Weight from local file"
+            self.totalWghts,self.LHE_wghts = self.getMrgdTotalWghts(['total_weights.root'])
+            print 'Weight: ',self.totalWghts
+        else:
+            self.totalWghts, self.LHE_wghts = self.getMrgdTotalWghts(inRootFiles)
+            print("Weight from local file")
 
 
 	##Dirty implementation
-	from array import array 
-	self.scale_nom = array('d', [0])
+        from array import array
+        self.scale_nom = array('d', [0])
+        self.mc_channel_number = array('d', [0])
+        self.pileupEventWeight_090 = array('d', [0])
+        self.JVT_EventWeight = array('d', [0])
+        self.mcWeightOrg = array('d', [0])
 	
 
 	#Write the sumweights Histograms to the output file
@@ -87,12 +91,16 @@ class Analyze:
 
     def getMrgdTotalWghts(self,filenames):
     	rooF_li 		= [ROOT.TFile.Open(x) for x in filenames]
-    	mrgdTotalWght   	= reduce(lambda x,y: x+y, [x.Get("loose/Count") for x in rooF_li])
+        print "aa ",rooF_li[0]
+        wdf = ROOT.RDataFrame("sumWeights",rooF_li[0])
+    	# mrgdTotalWght   	= reduce(lambda x,y: x+y, [x.Get("loose/Count") for x in rooF_li])
+    	mrgdTotalWght   	= wdf.Sum("totalEventsWeighted").GetValue()
     	mrgdLHEWght     	= ROOT.TH1D()
-    	if rooF_li[0].Get("loose/Count_LHE"):
-            mrgdLHEWght     = reduce(lambda x,y: x+y, [x.Get("loose/Count_LHE") for x in rooF_li])
-	mrgdLHEWght.SetDirectory(0)
-	mrgdTotalWght.SetDirectory(0)
+    	# if rooF_li[0].Get("loose/Count_LHE"):
+        #     mrgdLHEWght     = reduce(lambda x,y: x+y, [x.Get("loose/Count_LHE") for x in rooF_li])
+	# mrgdLHEWght.SetDirectory(0)
+	# mrgdTotalWght.SetDirectory(0)
+    #     print "RRR ",mrgdTotalWght
     	return(mrgdTotalWght,mrgdLHEWght)
 
     def selectBranches(self,brnchFileName):
@@ -109,31 +117,41 @@ class Analyze:
 
     def prepareSelection(self,brnchFileName,Cuts):
     	self.selectBranches(ops.branches_file)
-	#Also turn the branches in cutformula
-	import re
-	cutVars = [x for x in re.findall(r'\w+',Cuts) if len(x)>=4]
-	for x in cutVars:
-	    self.chain.SetBranchStatus(x,1)
-	self.chain.LoadTree(0)
-	self.outFile.cd()
-	self.newTree= self.chain.CloneTree(0)
-	self.newTree.SetName(self.outTreeName)
-	self.newTree.Branch("scale_nom",self.scale_nom,"scale_nom/D")
+        #Also turn the branches in cutformula
+        import re
+        cutVars = [x for x in re.findall(r'\w+',Cuts) if len(x)>=4]
+        for x in cutVars:
+	        self.chain.SetBranchStatus(x,1)
+        self.chain.LoadTree(0)
+        self.outFile.cd()
+        self.newTree= self.chain.CloneTree(0)
+        self.newTree.SetName(self.outTreeName)
+        self.newTree.Branch("scale_nom",self.scale_nom,"scale_nom/D")
+        self.newTree.Branch("mc_channel_number",self.mc_channel_number,"mc_channel_number/D")
+        self.newTree.Branch("mcWeightOrg",self.mcWeightOrg,"mcWeightOrg/D")
+        self.newTree.Branch("pileupEventWeight_090",self.pileupEventWeight_090,"pileupEventWeight_090/D")
+        self.newTree.Branch("JVT_EventWeight",self.JVT_EventWeight,"JVT_EventWeight/D")
 
-	self.treeFormula = ROOT.TTreeFormula("cut",Cuts,self.chain)
-	self.chain.SetNotify(self.treeFormula)
+        self.treeFormula = ROOT.TTreeFormula("cut",Cuts,self.chain)
+        self.chain.SetNotify(self.treeFormula)
 
     def execute(self):
-	self.outFile.cd()
+        self.outFile.cd()
         for i in progressbar(xrange(ch.GetEntries()),"Progress"):
             self.chain.GetEntry(i)
-	    self.scale_nom[0] = ch.mc_rawXSection*ch.mc_kFactor/self.totalWghts.At(2)
-            if self.treeFormula.EvalInstance(): 
-	        self.newTree.Fill()
+            # self.scale_nom[0] = ch.mc_rawXSection*ch.mc_kFactor/self.totalWghts.At(2)
+            self.scale_nom[0] = ch.mc_rawXSection*ch.mc_kFactor/self.totalWghts
+            self.mc_channel_number[0] = ch.mcChannelNumber
+            self.mcWeightOrg[0]= ch.weight_mc
+            self.pileupEventWeight_090[0] = ch.weight_pileup
+            self.JVT_EventWeight[0] =ch.weight_jvt
+            # print("WWW ",ch.mcChannelNumber)
+            if self.treeFormula.EvalInstance():
+                self.newTree.Fill()
 
     def finalize(self):
-	self.outFile.cd()
-	self.newTree.AutoSave()
+        self.outFile.cd()
+        self.newTree.AutoSave()
 
 if __name__ == '__main__': 
 
@@ -177,17 +195,17 @@ if __name__ == '__main__':
     di_ana.prepareSelection(ops.branches_file,dilepCuts.getCuts())
     di_ana.execute()
     di_ana.finalize()
-
+    #
     tri_ana = Analyze(ch,"trilep",outFile)
     tri_ana.prepareSelection(ops.branches_file,trilepCuts.getCuts())
     tri_ana.execute()
     tri_ana.finalize()
-
+    #
     quad_ana = Analyze(ch,"quadlep",outFile)
     quad_ana.prepareSelection(ops.branches_file,quadCuts.getCuts())
     quad_ana.execute()
     quad_ana.finalize()
-
+    #
     penta_ana = Analyze(ch,"pentalep",outFile)
     penta_ana.prepareSelection(ops.branches_file,pentaCuts.getCuts())
     penta_ana.execute()

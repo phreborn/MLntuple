@@ -1,7 +1,7 @@
 mc_xSection
 mc_rawXSection
 mc_kFactor 
-mc_channel_number
+mcChannelNumber
 isBlinded
 MV2c10_70_EventWeight
 SherpaNJetWeight
@@ -11,6 +11,7 @@ RunNumber
 EventNumber
 mcEventWeights
 mcWeightOrg
+weight_*
 RunYear
 lepSF*
 higgsDecayMode
