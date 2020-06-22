@@ -1,4 +1,6 @@
-import ROOT,sys
+#!/usr/bin/env python
+import ROOT,sys,optparse,os,traceback,fnmatch
+from itertools import *
 
 def saveHists(OF_name):
     #inFileList = open("input.txt",'r')
@@ -9,8 +11,37 @@ def saveHists(OF_name):
 
     fout = ROOT.TFile.Open(OF_name,"RECREATE")
     fout.mkdir("loose")
-    sumWeightsTotal = sum([x.Get("loose/Count").At(2) for x in rooF_li])
-    totalEvents     = sum([x.Get("loose/Count").At(1) for x in rooF_li])
+
+    def gettotEvenWeighted(inputfile):
+        wdf = ROOT.RDataFrame("sumWeights", inputfile)
+        sumEventsWeight = wdf.Sum("totalEventsWeighted").GetValue()
+        return sumEventsWeight
+
+    totalEventWeight = []
+    totalEvent = []
+    for w in rooF_li:
+        # weightTree =w.Get("sumWeights")
+        #print("XXX ", w)
+
+        # for events in weightTree:
+        #     print events.totalEventsWeighted
+
+        wdf = ROOT.RDataFrame("sumWeights", w)
+        # sumEventsWeight = wdf.Sum("totalEventsWeighted").GetValue()
+        # sumEventsWeight = gettotEvenWeighted(w)
+        # sumEvents = wdf.Sum("totalEvents").GetValue()
+        # totalEventWeight.append(sumEventsWeight)
+        totalEventWeight.append(gettotEvenWeighted(w))
+        # /totalEvent.append(sumEvents)
+        totalEvent.append(wdf.Sum("totalEvents").GetValue())
+
+    # sumWeightsTotal = sum([x.Get("loose/Count").At(2) for x in rooF_li])
+    sumWeightsTotal = sum(totalEventWeight)
+    # totalEvents     = sum([x.Get("loose/Count").At(1) for x in rooF_li])
+    totalEvents     = sum(totalEvent)
+
+    #print ("AAAA, ",sumWeightsTotal)
+    #print ("BBBB, ",totalEvent)
 
     '''Special normalization for ttH samples with anomalous weights
     a) remove all the events with |MC_weight|>3*xsect (implemented in ttHMlEventSaver_Base and ttHMlEventSaver
@@ -38,7 +69,7 @@ def saveHists(OF_name):
     sumw = rooF_li[0].sumWeights
     sumw.GetEntry(0)
     dsid    = sumw.dsid
-    
+    #print ("DSID: ",dsid)
     '''Do not want to open the nominal tree for every DSID'''
     runy    = 0 
     if dsid == 345672 or dsid == 345673 or dsid == 345674 or dsid == 345873 or dsid == 345874 or dsid == 345875:
@@ -46,14 +77,22 @@ def saveHists(OF_name):
         nom.GetEntry(0)
         runy    = nom.RunYear
 
-    mrgdTotalWght   = reduce(lambda x,y: x+y, [x.Get("loose/Count") for x in rooF_li])
+    # mrgdTotalWght   = reduce(lambda x,y: x+y, [x.sumWeights.Get("loose/Count") for x in rooF_li])
+    mrgdTotalWght_val   = reduce(lambda x,y: x+y, [gettotEvenWeighted(x) for x in rooF_li])
+    #print ("FFF ",mrgdTotalWght_val)
+
     mrgdLHEWght     = ROOT.TH1D()
-    if rooF_li[0].Get("loose/Count_LHE"): mrgdLHEWght     = reduce(lambda x,y: x+y, [x.Get("loose/Count_LHE") for x in rooF_li])
+    mrgdTotalWght = ROOT.TH1D("Count","",5,0.,5.)
+    # mrgdTotalWght.SetName("Count")
+    if rooF_li[0].Get("loose/Count_LHE"):
+        mrgdLHEWght     = reduce(lambda x,y: x+y, [x.Get("loose/Count_LHE") for x in rooF_li])
 
     
     print "Sample dsid: %d"%dsid
-    print "Existing total weights: %.2f"%mrgdTotalWght.At(2)
-    sumWeights  = mrgdTotalWght.At(2)
+    # print "Existing total weights: %.2f"%mrgdTotalWght.At(2)
+    print "Existing total weights: %.2f"%mrgdTotalWght_val
+    # sumWeights  = mrgdTotalWght.At(2)
+    sumWeights  = mrgdTotalWght_val
     if dsid == 345672:
         if runy == 2015 or runy ==2016:
             sumWeights = sumWeights * 0.584946
@@ -103,13 +142,13 @@ def saveHists(OF_name):
             mrgdLHEWght.Scale(0.931735)
 
     mrgdTotalWght.SetBinContent(2,sumWeights)
-    print "Corrected total weights: %.2f"%mrgdTotalWght.At(2)
+    # print "Corrected total weights: %.2f"%mrgdTotalWght.At(2)
 
     
     fout.cd("loose")
     mrgdTotalWght.Write()
     mrgdLHEWght.Write()
     fout.Close()
-    print 'totalWeights: %.2f'%mrgdTotalWght.At(2)
+    # print 'totalWeights: %.2f'%mrgdTotalWght.At(2)
     
 saveHists(sys.argv[2])

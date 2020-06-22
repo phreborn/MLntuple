@@ -16,6 +16,22 @@ To run the script execute the following
 This will create an output file `output.root` which containes the ntuples and branches requested. 
 
 ### Background samples 
-https://gitlab.cern.ch/atlasHTop/ttHMultiGFW2/tree/master/ttHMultilepton/share 
+#https://gitlab.cern.ch/atlasHTop/ttHMultiGFW2/tree/master/ttHMultilepton/share 
 
 ## Running on the grid. 
+
+Run commmand: 
+
+  source setup.sh
+
+Job submission to the grid is recommended from lxplus machines due to the fact that GetCountHist.py script requires data files to calculate a number of total weighted events from a current dataset.
+In the other case, the number of weighted events will be calculated from a single file from the current dataset and the sum of 1/scale_nom from all outputs will be necessary to obtain the total number of weighted events.  
+
+For the run jobs use command below.
+
+./grid_sub.sh sample_name vTag
+
+
+e.g
+./grid_sub.sh user.sparajul.364250.Sherpa.DAOD_HIGG8D1.e5894_s3126_r9364_r9315_p3983.2104_hhmlv2_mc16_a_output_root TEST_GFW2_V1
+

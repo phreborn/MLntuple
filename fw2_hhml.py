@@ -88,18 +88,55 @@ class Analyze:
     	#    ldir.WriteTObject(self.LHE_wghts)
 	#    ldir.Write()
     	#    print "done !"
+    # def getSumtotalEventsWeighted(self,filename):
+    #     rFile = ROOT.TFile.Open(filename)
+    #     print rFile
+    #     weightTree = rFile.Get("sumWeights")
+    #     vec = ROOT.std.vector('float')()
+    #     weightTree.SetBranchAddress('totalEventsWeighted', vec)
+    #
+    #     for i in range(weightTree.GetEntries()):
+    #         weightTree.GetEntry(i)
+    #         print(vec.size())
+    #     sumWeights = 1
+    #
+    #     return(sumWeights)
 
     def getMrgdTotalWghts(self,filenames):
-    	rooF_li 		= [ROOT.TFile.Open(x) for x in filenames]
-        print "aa ",rooF_li[0]
-        wdf = ROOT.RDataFrame("sumWeights",rooF_li[0])
-    	# mrgdTotalWght   	= reduce(lambda x,y: x+y, [x.Get("loose/Count") for x in rooF_li])
-    	mrgdTotalWght   	= wdf.Sum("totalEventsWeighted").GetValue()
-    	mrgdLHEWght     	= ROOT.TH1D()
+    	rooF_li = [ROOT.TFile.Open(x) for x in filenames]
+        #print "aa ",rooF_li[0]
+        #print "aaa2 ",filenames[0]
+        mrgdLHEWght = ROOT.TH1D()
+        mrgdTotalWght = 1
+        if filenames[0] == 'total_weights.root':
+            #print "AAAABBB "
+            mrgdTotalWght1 = reduce(lambda x, y: x + y, [x.Get("loose/Count") for x in rooF_li])
+            if rooF_li[0].Get("loose/Count_LHE"):
+                mrgdLHEWght     = reduce(lambda x,y: x+y, [x.Get("loose/Count_LHE") for x in rooF_li])
+            #print "WWWW ",mrgdTotalWght1
+            mrgdLHEWght.SetDirectory(0)
+            mrgdTotalWght1.SetDirectory(0)
+            mrgdTotalWght = mrgdTotalWght1.At(2)
+            #print "FFF ", mrgdTotalWght
+        else:
+            totalSum=[]
+            for w in rooF_li:
+                #print("XXX ",w)
+                # for events in weightTree:
+                #     print events.totalEventsWeighted
+                wdf = ROOT.RDataFrame("sumWeights",w)
+                sumEvents= wdf.Sum("totalEventsWeighted").GetValue()
+                totalSum.append(sumEvents)
+
+
+            mrgdTotalWght = sum(totalSum)
+        # mrgdTotalWght   	= reduce(lambda x,y: x+y, [x.Get("loose/Count") for x in rooF_li])
     	# if rooF_li[0].Get("loose/Count_LHE"):
         #     mrgdLHEWght     = reduce(lambda x,y: x+y, [x.Get("loose/Count_LHE") for x in rooF_li])
-	# mrgdLHEWght.SetDirectory(0)
-	# mrgdTotalWght.SetDirectory(0)
+	    # mrgdLHEWght.SetDirectory(0)
+    	# mrgdTotalWght.SetDirectory(0)
+        print "bbb",mrgdTotalWght
+        # print "CCCC ",
     #     print "RRR ",mrgdTotalWght
     	return(mrgdTotalWght,mrgdLHEWght)
 
@@ -209,4 +246,5 @@ if __name__ == '__main__':
     penta_ana = Analyze(ch,"pentalep",outFile)
     penta_ana.prepareSelection(ops.branches_file,pentaCuts.getCuts())
     penta_ana.execute()
+    #
     penta_ana.finalize()

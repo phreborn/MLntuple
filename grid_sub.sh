@@ -19,17 +19,31 @@ cp $count_script .
 #lsetup "root 6.14.04-x86_64-slc6-gcc62-opt"
 
 
-rucio list-file-replicas --protocol root --pfns $1 | rev |sort -u -t/ -k1,1| rev | tee input.txt 
-#fileList=$(rucio list-file-replicas --protocol root --pfns $1 | rev |sort -u -t/ -k1,1| rev | xargs echo  | sed -e s'/ /,/'g)
-export X509_USER_PROXY=/users/rnarayan/code/HHML/HHMLFW2/x509up_u508555
-echo $RUCIO_ACCOUNT
+   rucio list-file-replicas --protocol root --pfns $1 | grep phys-hdbs | tee input.txt 
+   #fileList=$(rucio list-file-replicas --protocol root --pfns $1 | rev |sort -u -t/ -k1,1| rev | xargs echo  | sed -e s'/ /,/'g)
+   #export X509_USER_PROXY=/users/rnarayan/code/HHML/HHMLFW2/x509up_u508555
+   echo $RUCIO_ACCOUNT
+   grid_user=$RUCIO_ACCOUNT
 
-#source $src_script
-#lsetup "root 6.14.04-x86_64-slc6-gcc62-opt"
-#lsetup xrootd 
-python GetCountHist.py input.txt total_weights.root
+   out_name="user."$grid_user"."$(echo $1 |rev|  cut -d "." -f5 | rev)"."$(echo $1 |rev|  cut -d "." -f3 | rev)"."$(echo $1 |rev|  cut -d "." -f2 | rev)"."$2
 
-#python fw2_hhml.py -s branchList.txt $fileList 
+   #source $src_script
+   #lsetup "root 6.14.04-x86_64-slc6-gcc62-opt"
+   #lsetup xrootd 
+   if [ -s input.txt ]
+    then
+      python GetCountHist.py input.txt total_weights.root
+   fi
+    #python fw2_hhml.py -s branchList.txt $fileList 
 
 
-prun --official  --voms atlas:/atlas/phys-higgs/Role=production --exec "python fw2_hhml.py -s branchList.txt %IN" --inDS $1 --outDS $(echo $1 |rev|  cut -d "." -f3- | rev)_$2 --outputs output.root --extFile total_weights.root --rootVer=6.14/04 --cmtConfig=x86_64-slc6-gcc62-opt
+    #prun --official  --voms atlas:/atlas/phys-higgs/Role=production --exec "python fw2_hhml.py -s branchList.txt %IN" --inDS $1 --outDS $(echo $1 |rev|  cut -d "." -f5 | rev)_$2 --outputs output.root --extFile total_weights.root --rootVer=6.14/04 --cmtConfig=x86_64-slc6-gcc62-opt
+   if [ -s total_weights.root ] 
+    then
+      prun --exec "python fw2_hhml.py -s branchList.txt %IN" --inDS $1 --outDS $out_name --outputs output.root --extFile total_weights.root --rootVer=6.18/04 --cmtConfig=x86_64-centos7-gcc8-opt
+    else
+      prun --exec "python fw2_hhml.py -s branchList.txt %IN" --inDS $1 --outDS $out_name --outputs output.root --rootVer=6.18/04 --cmtConfig=x86_64-centos7-gcc8-opt
+   fi
+
+
+#fi

@@ -1,7 +1,9 @@
 #!/bin/bash 
-export ATLAS_LOCAL_ROOT_BASE=/cvmfs/atlas.cern.ch/repo/ATLASLocalRootBase
-alias setupATLAS='source ${ATLAS_LOCAL_ROOT_BASE}/user/atlasLocalSetup.sh'
+#export ATLAS_LOCAL_ROOT_BASE=/cvmfs/atlas.cern.ch/repo/ATLASLocalRootBase
+#alias setupATLAS='source ${ATLAS_LOCAL_ROOT_BASE}/user/atlasLocalSetup.sh'
 
 setupATLAS
 
-lsetup "root 6.14.04-x86_64-slc6-gcc62-opt"
+lsetup "root 6.18.04-x86_64-centos7-gcc8-opt"
+voms-proxy-init -voms atlas
+lsetup rucio panda pyami
