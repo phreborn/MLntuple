@@ -77,6 +77,16 @@ class Analyze:
         self.pileupEventWeight_090 = array('d', [0])
         self.JVT_EventWeight = array('d', [0])
         self.mcWeightOrg = array('d', [0])
+
+#        self.njets = array('i', [0])
+#        self.jet_pt_0 = array('d', [0])
+#        self.jet_eta_0 = array('d', [0])
+#        self.jet_phi_0 = array('d', [0])
+#        self.jet_e_0 = array('d', [0])
+#        self.jet_pt_1 = array('d', [0])
+#        self.jet_eta_1 = array('d', [0])
+#        self.jet_phi_1 = array('d', [0])
+#        self.jet_e_1 = array('d', [0])
 	
 
 	#Write the sumweights Histograms to the output file
@@ -169,6 +179,16 @@ class Analyze:
         self.newTree.Branch("pileupEventWeight_090",self.pileupEventWeight_090,"pileupEventWeight_090/D")
         self.newTree.Branch("JVT_EventWeight",self.JVT_EventWeight,"JVT_EventWeight/D")
 
+#        self.newTree.Branch("njets",self.njets,"njets/I")
+#        self.newTree.Branch("jet_pt_0",self.jet_pt_0,"jet_pt_0/D")
+#        self.newTree.Branch("jet_eta_0",self.jet_eta_0,"jet_eta_0/D")
+#        self.newTree.Branch("jet_phi_0",self.jet_phi_0,"jet_phi_0/D")
+#        self.newTree.Branch("jet_e_0",self.jet_e_0,"jet_e_0/D")
+#        self.newTree.Branch("jet_pt_1",self.jet_pt_1,"jet_pt_1/D")
+#        self.newTree.Branch("jet_eta_1",self.jet_eta_1,"jet_eta_1/D")
+#        self.newTree.Branch("jet_phi_1",self.jet_phi_1,"jet_phi_1/D")
+#        self.newTree.Branch("jet_e_1",self.jet_e_1,"jet_e_1/D")
+
         self.treeFormula = ROOT.TTreeFormula("cut",Cuts,self.chain)
         self.chain.SetNotify(self.treeFormula)
 
@@ -183,6 +203,17 @@ class Analyze:
             self.pileupEventWeight_090[0] = ch.weight_pileup
             self.JVT_EventWeight[0] =ch.jvtSF_customOR
             # print("WWW ",ch.mcChannelNumber)
+
+#            self.njets[0] = ch.jet_pt.size()
+#            self.jet_pt_0[0] = ch.jet_pt[0] if ch.jet_pt.size() > 0 else 0
+#            self.jet_eta_0[0] = ch.jet_eta[0] if ch.jet_eta.size() > 0 else 0
+#            self.jet_phi_0[0] = ch.jet_phi[0] if ch.jet_phi.size() > 0 else 0
+#            self.jet_e_0[0] = ch.jet_e[0] if ch.jet_e.size() > 0 else 0
+#            self.jet_pt_1[0] = ch.jet_pt[1] if ch.jet_pt.size() > 1 else 0
+#            self.jet_eta_1[0] = ch.jet_eta[1] if ch.jet_eta.size() > 1 else 0
+#            self.jet_phi_1[0] = ch.jet_phi[1] if ch.jet_phi.size() > 1 else 0
+#            self.jet_e_1[0] = ch.jet_e[1] if ch.jet_e.size() > 1 else 0
+
             if self.treeFormula.EvalInstance():
                 self.newTree.Fill()
 
@@ -211,40 +242,11 @@ if __name__ == '__main__':
 
     [ch.AddFile(x) for x in inRootFiles]
 
-    onelepCuts = CutSelector("1l","onelep_type>0")
-
-    dilepCuts 	= CutSelector("2l","dilep_type>0")
-
-    trilepCuts 	= CutSelector("3l","trilep_type>0")
-
-    quadCuts = CutSelector("4l","quadlep_type>0")
-
-    pentaCuts = CutSelector("5l","total_leptons>=5")
+    leptauCuts 	= CutSelector("2l","dilep_type>0 && tau_pt_0>0")
 
     outFile = ROOT.TFile.Open(ops.output_file,"RECREATE","",512)
 
-    one_ana = Analyze(ch,"onelep",outFile)
-    one_ana.prepareSelection(ops.branches_file,onelepCuts.getCuts())
-    one_ana.execute()
-    one_ana.finalize()
-
-    di_ana = Analyze(ch,"dilep",outFile)
-    di_ana.prepareSelection(ops.branches_file,dilepCuts.getCuts())
-    di_ana.execute()
-    di_ana.finalize()
-    #
-    tri_ana = Analyze(ch,"trilep",outFile)
-    tri_ana.prepareSelection(ops.branches_file,trilepCuts.getCuts())
-    tri_ana.execute()
-    tri_ana.finalize()
-    #
-    quad_ana = Analyze(ch,"quadlep",outFile)
-    quad_ana.prepareSelection(ops.branches_file,quadCuts.getCuts())
-    quad_ana.execute()
-    quad_ana.finalize()
-    #
-    penta_ana = Analyze(ch,"pentalep",outFile)
-    penta_ana.prepareSelection(ops.branches_file,pentaCuts.getCuts())
-    penta_ana.execute()
-    #
-    penta_ana.finalize()
+    leptau_ana = Analyze(ch,"leptau",outFile)
+    leptau_ana.prepareSelection(ops.branches_file,leptauCuts.getCuts())
+    leptau_ana.execute()
+    leptau_ana.finalize()
