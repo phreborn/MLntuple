@@ -29,14 +29,7 @@ met_met
 met_phi
 triggers
 loose
-HLT_mu26_ivarmedium
-HLT_e140_lhloose_nod0
-HLT_mu50
-HLT_e17_lhloose_nod0_mu14
-HLT_e26_lhtight_nod0_ivarloose
-HLT_2e17_lhvloose_nod0
-HLT_e60_lhmedium_nod0
-HLT_mu22_mu8noL1
+HLT_*
 RunYear
 mc_xSection
 mc_kFactor

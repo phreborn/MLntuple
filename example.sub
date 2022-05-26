@@ -1,0 +1,8 @@
+executable              = condor/exe_??.sh
+arguments               = $(ClusterId) $(ProcId)
+output                  = condor/sub_??/log.$(ClusterId).$(ProcId).out
+error                   = condor/sub_??/log.$(ClusterId).$(ProcId).err
+log                     = condor/sub_??/run.$(ClusterId).log
+
++JobFlavour = "workday"
+queue

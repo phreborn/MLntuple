@@ -3,11 +3,11 @@
 rse=CERN-PROD_PHYS-HDBS
 
 #for camp in mc16a mc16d mc16e
-for camp in mc16e
+for camp in mc16a
 do
-  rm ${camp}/*/* -r
+  rm ${camp}/* -r
 
-  for ntuple in $(cat ${camp}.txt)
+  for ntuple in $(cat ${camp}.txt | grep -v "#")
   do
     group=$(echo ${ntuple} | cut -d : -f 1)
     ntuple=$(echo ${ntuple} | cut -d : -f 2)
@@ -22,7 +22,7 @@ do
     rse=
     for rs in ${rses}
     do
-      if [[ "${rs}" =~ "CERN" || "${rs}" =~ "MAINZ_LOCALGROUPDISK" ]];then rse=${rs};fi
+      if [[ "${rs}" =~ "CERN" ]];then rse=${rs};fi
     done
 
     #### get file replicas ####

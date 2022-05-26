@@ -12,11 +12,17 @@ def options():
     #parser.add_option("-i","--inputFile",dest="input_file",type=str,help="Input ROOT File",default='')
     parser.add_option("-o","--outputFile",dest="output_file",type=str,help="Output ROOT File",default='output.root')
     parser.add_option("-t","--tree",dest="tree",type=str,help="Input/Output tree name",default='nominal')
+    parser.add_option("-b","--batch",action="store_true",dest="batch",default=False,help="condor batch mode")
     return parser.parse_args()
 
 def progressbar(it, prefix="", size=60, file=sys.stdout):
     count = len(it)
     def show(j):
+        if ops.batch:
+          if 0 != (j*100.0/count)%5: pass
+          else:
+            print '%i%%'%(int(j*100/count))
+          return
         x = int(size*j/count)
         file.write("%s[%s%s] %i/%i\r" % (prefix, "#"*x, "."*(size-x), j, count))
         file.flush()        
