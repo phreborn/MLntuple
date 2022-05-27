@@ -28,6 +28,7 @@ do
   jobName=dump_${camp}_${dsid}_${init}; echo ${jobName}
   hepout=${condor}/sub_${jobName}
   if [ ! -d ${hepout} ]; then mkdir -p ${hepout}; fi
+  rm ${hepout}/* -r
   executable=${condor}/exe_${jobName}.sh
   > ${executable}
   subcfg=${condor}/${jobName}.sub
