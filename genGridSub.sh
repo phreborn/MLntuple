@@ -1,6 +1,6 @@
 #!/bin/bash
 
-vTag=24May22try01
+vTag=23Jun22try01
 
 grid_user=$RUCIO_ACCOUNT
 
@@ -24,12 +24,12 @@ do
   done
 done
 
-for camp in data15 data16 data17 data18
+for camp in data1516 data17 data18
 do
   allJobs=jobGrid${camp}.sh
   > ${allJobs}
   if [ ! -d gn2/${camp} ];then mkdir gn2/${camp};fi
-  fetchs=gn2/${camp}/getgn2.sh
+  fetchs=/eos/user/h/huirun/multilepton/leptau/gn2/${camp}/getgn2.sh
   > ${fetchs}
 
   inDSs=$(cat gn1/${camp}.txt)

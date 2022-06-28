@@ -30,11 +30,12 @@ do
 
   echo "#!/bin/bash" >> ${executable}
   echo "" >> ${executable}
+  echo "cd /afs/cern.ch/work/h/huirun/workspace/multilepton/ttHMulti/caf" >> ${executable}
+  echo "source setup.sh" >> ${executable}
   echo "cd ${workarea}" >> ${executable}
-  echo "export ATLAS_LOCAL_ROOT_BASE=/cvmfs/atlas.cern.ch/repo/ATLASLocalRootBase" >> ${executable}
-  echo "alias setupATLAS='source /cvmfs/atlas.cern.ch/repo/ATLASLocalRootBase/user/atlasLocalSetup.sh'" >> ${executable}
-  echo "setupATLAS" >> ${executable}
-  echo "lsetup \"root 6.18.04-x86_64-centos7-gcc8-opt\"" >> ${executable}
+  #echo "export ATLAS_LOCAL_ROOT_BASE=/cvmfs/atlas.cern.ch/repo/ATLASLocalRootBase" >> ${executable}
+  #echo "source \${ATLAS_LOCAL_ROOT_BASE}/user/atlasLocalSetup.sh" >> ${executable}
+  #echo "lsetup \"root 6.20.06-x86_64-centos7-gcc8-opt\"" >> ${executable}
 
 for it in $(seq ${init} 1 ${fin})
 do
@@ -51,7 +52,7 @@ do
   echo ${subfslist}
 
   echo "" >> ${executable}
-  echo "python dumpleptau.py -s branchList.txt ${subfslist} -o gn2/${camp}/${dsid}.root -b" >> ${executable}
+  echo "python dumpleptau.py -s branchList.txt ${subfslist} -o /eos/user/h/huirun/multilepton/leptau/gn2/${camp}/${dsid}.root -b" >> ${executable}
 done
 
   cat example.sub | sed 's/??/'${jobName}'/g' > ${subcfg}

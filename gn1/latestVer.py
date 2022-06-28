@@ -7,6 +7,11 @@ import re
 
 camps = ['a', 'd', 'e']
 
+usedMC = []
+with open("usedDISDs.txt", 'r') as f:
+  for line in f.readlines():
+    usedMC.append(line.replace('\n', ''))
+
 for camp in camps:
 
 #### collect DSIDs ####
@@ -45,6 +50,7 @@ for camp in camps:
       if 'Sh.DAOD' in line: continue
       if 'Sh_2' in line: continue
       mcid = line.split('.')[3]
+      if mcid not in usedMC: continue
       print mcid, '%s_output_root'%(idlabs[mcid])
       if '%s_output_root'%(idlabs[mcid]) not in line: continue
       outtxt.append(line)
