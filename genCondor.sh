@@ -2,7 +2,7 @@
 
 camp=mc16a
 
-dsids=$(ls gn1/${camp}/ | cut -d . -f 3 | sort)
+dsids=$(ls gn1/${camp}/ | grep root | cut -d . -f 3 | sort)
 
 ldsids=(${dsids})
 numID=${#ldsids[@]}
