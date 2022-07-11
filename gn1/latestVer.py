@@ -10,6 +10,7 @@ camps = ['a', 'd', 'e']
 usedMC = []
 with open("usedDISDs.txt", 'r') as f:
   for line in f.readlines():
+    if '#' in line: continue
     usedMC.append(line.replace('\n', ''))
 
 for camp in camps:
@@ -47,8 +48,8 @@ for camp in camps:
   outtxt = []
   with open("mc16"+camp+"_raw.txt", 'r') as inf:
     for line in inf.readlines():
-      if 'Sh.DAOD' in line: continue
-      if 'Sh_2' in line: continue
+      #if 'Sh.DAOD' in line: continue
+      #if 'Sh_2' in line: continue
       mcid = line.split('.')[3]
       if mcid not in usedMC: continue
       print mcid, '%s_output_root'%(idlabs[mcid])

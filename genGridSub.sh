@@ -1,10 +1,10 @@
 #!/bin/bash
 
-vTag=23Jun22try01
+vTag=06Jul22try01
 
 grid_user=$RUCIO_ACCOUNT
 
-for camp in mc16a mc16d mc16e
+for camp in mc16e
 do
   allJobs=jobGrid${camp}.sh
   > ${allJobs}
@@ -12,8 +12,7 @@ do
   fetchs=gn2/${camp}/getgn2.sh
   > ${fetchs}
 
-  inDSs=$(cat gn1/${camp}.txt)
-  inDSs=$(cat gn1/${camp}.txt | grep -v Sh.DAOD_HIGG8D1 | grep -v "#")
+  inDSs=$(cat gn1/${camp}.txt | grep -v "#")
   for inDS in ${inDSs}
   do
     inDS=$(echo ${inDS} | cut -d : -f 2)

@@ -130,7 +130,7 @@ group.phys-hdbs:group.phys-hdbs.364255.Sherpa.DAOD_HIGG8D1.e5916_s3126_r10724_p4
 group.phys-hdbs:group.phys-hdbs.364283.Sherpa.DAOD_HIGG8D1.e6055_s3126_r10724_p4308.040621_e2_output_root
 group.phys-hdbs:group.phys-hdbs.364284.Sherpa.DAOD_HIGG8D1.e6055_s3126_r10724_p4308.040621_e2_output_root
 group.phys-hdbs:group.phys-hdbs.364287.Sherpa.DAOD_HIGG8D1.e6055_s3126_r10724_p4308.040621_e2_output_root
-no file#group.phys-hdbs:group.phys-hdbs.410080.MadGraphPythia8EvtGen.DAOD_HIGG8D1.e4111_s3126_r10724_p4308.040621_e2_output_root
+group.phys-hdbs:group.phys-hdbs.410080.MadGraphPythia8EvtGen.DAOD_HIGG8D1.e4111_s3126_r10724_p4308.040621_e2_output_root
 group.phys-hdbs:group.phys-hdbs.410081.MadGraphPythia8EvtGen.DAOD_HIGG8D1.e4111_s3126_r10724_p4308.040621_e2_output_root
 group.phys-hdbs:group.phys-hdbs.410156.aMcAtNloPythia8EvtGen.DAOD_HIGG8D1.e5070_s3126_r10724_p4308.040621_e2_output_root
 group.phys-hdbs:group.phys-hdbs.410157.aMcAtNloPythia8EvtGen.DAOD_HIGG8D1.e5070_s3126_r10724_p4308.040621_e2_output_root
@@ -168,3 +168,10 @@ group.phys-hdbs:group.phys-hdbs.600765.PhH7EG.DAOD_HIGG8D1.e8186_s3126_r10724_p4
 group.phys-hdbs:group.phys-hdbs.600766.PhH7EG.DAOD_HIGG8D1.e8186_s3126_r10724_p4416.HHML_040621_nom_e2_output_root
 group.phys-hdbs:group.phys-hdbs.600767.PhH7EG.DAOD_HIGG8D1.e8186_s3126_r10724_p4416.HHML_040621_nom_e2_output_root
 group.phys-hdbs:group.phys-hdbs.600768.PhH7EG.DAOD_HIGG8D1.e8186_s3126_r10724_p4416.HHML_040621_nom_e2_output_root
+group.phys-hdbs:group.phys-hdbs.700011.Sh.DAOD_HIGG8D1.e7947_s3126_r10724_p4308.040621_e2_output_root
+group.phys-hdbs:group.phys-hdbs.700012.Sh.DAOD_HIGG8D1.e7947_s3126_r10724_p4308.040621_e2_output_root
+group.phys-hdbs:group.phys-hdbs.700013.Sh.DAOD_HIGG8D1.e7947_s3126_r10724_p4308.040621_e2_output_root
+group.phys-hdbs:group.phys-hdbs.700014.Sh.DAOD_HIGG8D1.e7947_s3126_r10724_p4308.040621_e2_output_root
+group.phys-hdbs:group.phys-hdbs.700015.Sh.DAOD_HIGG8D1.e7947_s3126_r10724_p4308.040621_e2_output_root
+group.phys-hdbs:group.phys-hdbs.700016.Sh.DAOD_HIGG8D1.e7947_s3126_r10724_p4308.040621_e2_output_root
+group.phys-hdbs:group.phys-hdbs.700017.Sh.DAOD_HIGG8D1.e7947_s3126_r10724_p4308.040621_e2_output_root
