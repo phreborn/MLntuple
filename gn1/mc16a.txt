@@ -186,3 +186,10 @@ user.operrin:user.operrin.410659.PhPy8EG.DAOD_HIGG8D1.e6671_s3126_r9364_p4308.04
 user.operrin:user.operrin.450661.aMcAtNloHerwig7EvtGen.DAOD_HIGG8D1.e7463_a875_r9364_p4308.040621_a_output_root
 user.operrin:user.operrin.450662.aMcAtNloHerwig7EvtGen.DAOD_HIGG8D1.e7463_a875_r9364_p4308.040621_a_output_root
 user.operrin:user.operrin.450663.aMcAtNloHerwig7EvtGen.DAOD_HIGG8D1.e7463_a875_r9364_p4308.040621_a_output_root
+user.operrin:user.operrin.700011.Sh.DAOD_HIGG8D1.e7947_s3126_r9364_p4308.040621_a_output_root
+user.operrin:user.operrin.700012.Sh.DAOD_HIGG8D1.e7947_s3126_r9364_p4308.040621_a_output_root
+user.operrin:user.operrin.700013.Sh.DAOD_HIGG8D1.e7947_s3126_r9364_p4308.040621_a_output_root
+user.operrin:user.operrin.700014.Sh.DAOD_HIGG8D1.e7947_s3126_r9364_p4308.040621_a_output_root
+user.operrin:user.operrin.700015.Sh.DAOD_HIGG8D1.e7947_s3126_r9364_p4308.040621_a_output_root
+user.operrin:user.operrin.700016.Sh.DAOD_HIGG8D1.e7947_s3126_r9364_p4308.040621_a_output_root
+user.operrin:user.operrin.700017.Sh.DAOD_HIGG8D1.e7947_s3126_r9364_p4308.040621_a_output_root

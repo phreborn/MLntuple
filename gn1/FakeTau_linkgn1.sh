@@ -3,17 +3,19 @@
 rse=CERN-PROD_PHYS-HDBS
 
 #for camp in mc16a mc16d mc16e
-for camp in mc16a mc16d
+for camp in mc16e
 do
-  rm ${camp}/* -r
+  dir=faketau/${camp}
+  rm ${dir}/* -r
 
-  for ntuple in $(cat ${camp}.txt | grep -v "#")
+  #for ntuple in $(cat ft_${camp}_raw.txt | grep -v "#" | grep -v "Sh.DAOD_" | grep -v "Sh_")
+  for ntuple in $(cat ft_${camp}_raw.txt | grep -v "#")
   do
     group=$(echo ${ntuple} | cut -d : -f 1)
     ntuple=$(echo ${ntuple} | cut -d : -f 2)
     dsid=$(echo ${ntuple} | cut -d . -f 3)
 
-    if [ ! -d ${camp}/${ntuple} ];then mkdir ${camp}/${ntuple};fi
+    if [ ! -d ${dir}/${ntuple} ];then mkdir ${dir}/${ntuple};fi
 
     #### get dataset RSES ####
     #rses=($(rucio list-dataset-replicas ${ntuple} | grep '|' | grep -v RSE | grep -v '+' | cut -d '|' -f 2 | sed 's/ //g'))
@@ -34,7 +36,7 @@ do
     for file in ${orifiles}
     do
       subnum=$(echo ${file} | cut -d . -f 4)
-      ln -s /${file} ${camp}/${ntuple}/gn1_${subnum}.root
+      ln -s /${file} ${dir}/${ntuple}/gn1_${subnum}.root
     done
 
     #### print info ####
